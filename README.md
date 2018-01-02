@@ -238,6 +238,19 @@ Folder permissions - `accesschk.exe -dqv <path>`
 `net stop upnphost`
 `net start upnphost`
 
+* Quick wins
+`reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon"`
+`reg query "HKLM\SYSTEM\Current\ControlSet\Services\SNMP"`
+`reg query" HKCU\Software\SimonTatham\PuTTY\Sessions"`
+`reg query "HKCU\Software\ORL\WinVNC3\Password"`
+
+* Windows specific LPE vulns
+- https://www.exploit-db.com/exploits/11199/
+- https://www.exploit-db.com/exploits/18176/
+- https://www.exploit-db.com/exploits/15609/
+- https://www.securityfocus.com/bid/42269/exploit
+- https://www.securityfocus.com/bid/46136/exploit
+
 
 
 ## References
