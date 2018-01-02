@@ -344,6 +344,12 @@ Installed pkgs: `dpkg -l` (debian), `rpm -qa` (RH)
 sudo version? `sudo -V`     
 Available compilers `dpkg --list 2>/dev/null| grep compiler |grep -v decompiler 2>/dev/null && yum list installed 'gcc*' 2>/dev/null| grep gcc 2>/dev/null`     
 
+### Docker tips
+Since most likely Docker runs as root if you can execute docker commands as unpriviledged user you can very likely use Docker's privs instead.
+
+`docker run --rm -it --pid=host --net=host --privileged -v /:/host ubuntu bash` - note that the root folder from host is mounted as `/host`. You'll also see all processes running on host and be connected to same NICs.
+
+You may want to look into escaping UTS and IPC namespacing with `--uts=host --ipc=host`
 
 ### Upload files using cUrl with WebDAV
 ```
