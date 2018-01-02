@@ -184,6 +184,11 @@ spawn sh
 interact
 ```
 
+* Script
+
+`script /dev/null`
+
+
 ## Inside Windows
 
 * Get version     
