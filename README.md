@@ -175,6 +175,15 @@ target:
 * Python (Windows)     
 `c:\python26\python.exe -c 'import pty; pty.spawn("c:\\windows\\system32\\cmd.exe")' `
 
+* Expect
+
+sh.exp
+```
+#!/usr/bin/expect
+spawn sh
+interact
+```
+
 ## Inside Windows
 
 * Get version     
