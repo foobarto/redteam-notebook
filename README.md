@@ -100,9 +100,9 @@ Once access to admin panel is gained it's possible to use the task scheduler to 
 To execute it create a probe `Debugging & Logging` -> `System probes` -> URL=<some URL>, Probe fail - fail if probe does not contain "blahblah", Execute program <path to our downloaded exe>. And then run probe manually.
   
 * Files worth grabbing     
-** CF7 \lib\neo-query.xml
-** CF8 \lib\neo-datasource.xml
-** CF9 \lib\neo-datasource.xml
+  * CF7 \lib\neo-query.xml
+  * CF8 \lib\neo-datasource.xml
+  * CF9 \lib\neo-datasource.xml
 
 * Simple remote CFM shell     
 ```
