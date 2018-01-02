@@ -402,5 +402,4 @@ For all shellcode see `msfvenom –help-formats` for information as to valid par
 * [From LFI to Shell](http://resources.infosecinstitute.com/local-file-inclusion-code-execution)
 * [Useful Linux commands](https://highon.coffee/blog/linux-commands-cheat-sheet/)
 * [Local Linux Enumeration](https://www.rebootuser.com/?p=1623)
-
 * [Creating Metasploid Payloads](https://netsec.ws/?p=331)
