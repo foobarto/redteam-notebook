@@ -519,6 +519,7 @@ For all shellcode see `msfvenom –help-formats` for information as to valid par
 
 ## References
 * [OSCP Exam Guide](https://support.offensive-security.com/#!oscp-exam-guide.md) - MUST read!
+* [The Magic of Learning](http://bitvijays.github.io/) - a real treasure trove!
 * [FuzzySecurity](http://www.fuzzysecurity.com) - this is something you must bookmark... period. I found the [Windows Privilege Escalation Fundamentals](http://www.fuzzysecurity.com/tutorials/16.html) especially useful.
 * [WMIC reference/guide](https://www.computerhope.com/wmic.htm)
 * [SysInternals](https://docs.microsoft.com/en-us/sysinternals/) - this is a must have for working on Windows boxes.
@@ -535,4 +536,4 @@ For all shellcode see `msfvenom –help-formats` for information as to valid par
 * [Local Linux Enumeration](https://www.rebootuser.com/?p=1623)
 * [Creating Metasploid Payloads](https://netsec.ws/?p=331)
 * [Shellshock PoCs](https://github.com/mubix/shellshocker-pocs)
-* [CTF Series: Vulnerable Machines](http://bitvijays.github.io/LFC-VulnerableMachines.html)
+
