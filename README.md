@@ -535,3 +535,4 @@ For all shellcode see `msfvenom –help-formats` for information as to valid par
 * [Local Linux Enumeration](https://www.rebootuser.com/?p=1623)
 * [Creating Metasploid Payloads](https://netsec.ws/?p=331)
 * [Shellshock PoCs](https://github.com/mubix/shellshocker-pocs)
+* [CTF Series: Vulnerable Machines](http://bitvijays.github.io/LFC-VulnerableMachines.html)
