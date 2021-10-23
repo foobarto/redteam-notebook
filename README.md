@@ -210,6 +210,8 @@ target:
 * Python (Linux)     
 `python -c 'import pty; pty.spawn("/bin/bash")' `
 
+Then Ctrl-Z back to local shell and `stty raw -echo`, then back to remote shell with `fg` and set terminal with `export TERM=xterm`.
+
 * Python (Windows)     
 `c:\python26\python.exe -c 'import pty; pty.spawn("c:\\windows\\system32\\cmd.exe")' `
 
@@ -462,7 +464,9 @@ sudo version?
 Available compilers      
 `dpkg --list 2>/dev/null| grep compiler |grep -v decompiler 2>/dev/null && yum list installed 'gcc*' 2>/dev/null| grep gcc 2>/dev/null`     
 
-
+If you find a privileged bash shell which uses wildcard when iterating over files on folder you can create files in note that you can create files which names will be parsed as arguments to the command that is used to iterate over said files. This opens up interesting attack vector, ie when there's a for loop and inside the loop script executes for example `cp` on each file. If you create file with `touch -- '--someargument'` it will be passed to the command as `--someargument`.
+Good example is if such script copies files somewhere. Adding a file named `--preserve=mode` and also copying `/bin/bash` in same folder and changing its mode to `4755` will result the script copying bash as a root with suid permissions. Executing that copy of bash with `bash -p` will result in bash running as root.
+ 
 ### Docker tips
 Since most likely Docker runs as root if you can execute docker commands as unpriviledged user you can very likely use Docker's privs instead.
 
